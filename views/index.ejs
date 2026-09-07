@@ -1,0 +1,40 @@
+    <%- include("partials/header") %>
+    <main>
+        <h2>Inventory</h2>
+        <dl class="counts">
+            <div class="items-count">
+                <dt>Items</dt>
+                <dd><%= counts.items %></dd>
+            </div>
+            <div class="categories-count">
+                <dt>Categories</dt>
+                <dd><%= counts.categories %></dd>
+            </div>
+            <div class="suppliers-count">
+                <dt>Suppliers</dt>
+                <dd><%= counts.suppliers %></dd>
+            </div>
+        </dl>
+        <div class="info">
+            <div class="recently-added">
+                <h3>Recently added</h3>
+                <% recent.forEach((item) => { %>
+                    <div class="item">
+                        <a href="/items/<%= item.id %>"><%= item.name %></a>
+                        <p><%= formatRelativeDate(item.added_at) %></p>
+                    </div>
+                <% }) %>
+            </div>
+            <div class="running-low">
+                <h3>Running low</h3>
+                <% lowStock.forEach((item) => { %>
+                    <div class="item">
+                        <a href="/items/<%= item.id %>"><%= item.name %></a>
+                        <p><%= item.stock %> left</p>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
