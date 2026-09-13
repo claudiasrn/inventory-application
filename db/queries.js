@@ -24,7 +24,10 @@ async function getItemsByCategory(categoryId) {
 }
 
 async function getItemById(id) {
-	const { rows } = await pool.query("SELECT * FROM items WHERE id = $1", [id]);
+	const { rows } = await pool.query(
+		"SELECT items.id, items.name, items.description, items.price, items.stock, items.category_id, items.added_at, categories.name AS category_name FROM items JOIN categories ON items.category_id = categories.id WHERE items.id = $1",
+		[id],
+	);
 	return rows[0];
 }
 
@@ -56,6 +59,14 @@ async function getAllItems() {
 	return rows;
 }
 
+async function getSuppliersByItem(itemId) {
+	const { rows } = await pool.query(
+		"SELECT suppliers.id, suppliers.name, item_suppliers.wholesale_price FROM item_suppliers JOIN suppliers ON item_suppliers.supplier_id = suppliers.id WHERE item_suppliers.item_id = $1 ORDER BY suppliers.name",
+		[itemId],
+	);
+	return rows;
+}
+
 module.exports = {
 	getAllCategories,
 	getCategoryById,
@@ -65,4 +76,5 @@ module.exports = {
 	getRecentItems,
 	getLowStockItems,
 	getAllItems,
+	getSuppliersByItem,
 };
