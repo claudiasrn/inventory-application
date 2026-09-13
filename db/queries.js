@@ -2,7 +2,7 @@ const pool = require("./pool");
 
 async function getAllCategories() {
 	const { rows } = await pool.query(
-		"SELECT id, name, description, (SELECT COUNT(*) FROM items WHERE items.category_id = categories.id) AS item_count FROM categories",
+		"SELECT id, name, description, (SELECT COUNT(*) FROM items WHERE items.category_id = categories.id) AS item_count FROM categories ORDER BY name",
 	);
 	return rows;
 }
@@ -16,7 +16,7 @@ async function getCategoryById(id) {
 
 async function getItemsByCategory(categoryId) {
 	const { rows } = await pool.query(
-		"SELECT * FROM items WHERE category_id = $1",
+		"SELECT * FROM items WHERE category_id = $1 ORDER BY name",
 		[categoryId],
 	);
 
@@ -37,14 +37,21 @@ async function getCounts() {
 
 async function getRecentItems() {
 	const { rows } = await pool.query(
-		"SELECT * FROM items ORDER BY added_at DESC LIMIT 5",
+		"SELECT * FROM items ORDER BY added_at DESC, name LIMIT 5",
 	);
 	return rows;
 }
 
 async function getLowStockItems() {
 	const { rows } = await pool.query(
-		"SELECT * FROM items WHERE stock < 5 ORDER BY stock ASC",
+		"SELECT * FROM items WHERE stock < 5 ORDER BY stock ASC, name",
+	);
+	return rows;
+}
+
+async function getAllItems() {
+	const { rows } = await pool.query(
+		"SELECT items.id, items.name, items.price, items.stock, categories.name AS category_name FROM items JOIN categories ON items.category_id = categories.id ORDER BY items.name",
 	);
 	return rows;
 }
@@ -57,4 +64,5 @@ module.exports = {
 	getCounts,
 	getRecentItems,
 	getLowStockItems,
+	getAllItems,
 };
