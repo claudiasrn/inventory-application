@@ -1,7 +1,9 @@
 const pool = require("./pool");
 
 async function getAllCategories() {
-	const { rows } = await pool.query("SELECT * FROM categories");
+	const { rows } = await pool.query(
+		"SELECT id, name, description, (SELECT COUNT(*) FROM items WHERE items.category_id = categories.id) AS item_count FROM categories",
+	);
 	return rows;
 }
 
