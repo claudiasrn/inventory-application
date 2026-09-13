@@ -2,7 +2,7 @@ const path = require("node:path");
 const express = require("express");
 const indexRouter = require("./routes/indexRouter");
 const categoryRouter = require("./routes/categoriesRouter");
-const itemRouter = require("./routes/itemRouter");
+const itemRouter = require("./routes/itemsRouter");
 
 const app = express();
 
