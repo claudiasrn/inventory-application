@@ -1,0 +1,50 @@
+    <%- include("partials/header") %>
+    <main>
+        <a href="/items">All items</a>
+        <div class="top-part">
+            <h2><%= item.name %></h2>
+            <a href="/items/<%= item.id %>/edit">Edit</a>
+            <a href="/items/<%= item.id %>/delete">Delete</a>
+        </div>
+        <p><%= item.description %></p>
+        <dl class="stats">
+            <div class="price">
+                <dt>Price</dt>
+                <dd><%= item.price %>€</dd>
+            </div>
+            <div class="stock">
+                <dt>In stock</dt>
+                <dd><%= item.stock %></dd>
+            </div>
+            <div class="category">
+                <dt>Category</dt>
+                <dd><a href="/categories/<%= item.category_id %>"><%= item.category_name %></a></dd>
+            </div>
+        </dl>
+        <h3>Supplied by</h3>
+        <% if (suppliers.length === 0) { %>
+            <div class="empty">
+                <p>No suppliers linked yet</p>
+                <p>Link one to track wholesale prices.</p>
+            </div>
+        <% } else { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Supplier</th>
+                        <th scope="col">Wholesale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% suppliers.forEach((supplier) => { %>
+                        <tr>
+                            <td><a href="/suppliers/<%= supplier.id %>"><%= supplier.name %></a></td>
+                            <td><%= supplier.wholesale_price %>€</td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </main>
+</body>
+</html>
