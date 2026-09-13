@@ -134,7 +134,7 @@ async function postCategoryDeleteForm(req, res) {
 	try {
 		await db.deleteCategory(id);
 	} catch (err) {
-		if (err.code === "23503") {
+		if (err.code === "23001") {
 			const category = await db.getCategoryById(id);
 			return res.status(409).render("deleteConfirm", {
 				heading: `Delete ${category.name}?`,
