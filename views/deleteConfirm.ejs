@@ -1,0 +1,14 @@
+    <%- include("partials/header") %>
+    <main>
+        <h2><%= heading %></h2>
+        <% if (error) { %>
+            <p class="error"><%= error %></p>
+        <% } %>
+        <p><%= message %></p>
+        <form method="post" action="<%= formAction %>">
+            <button type="submit">Delete</button>
+            <a href="<%= cancelHref %>">Cancel</a>
+        </form>
+    </main>
+</body>
+</html>

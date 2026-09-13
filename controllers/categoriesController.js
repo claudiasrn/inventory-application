@@ -104,6 +104,53 @@ async function postCategoryEditForm(req, res) {
 	res.redirect(`/categories/${id}`);
 }
 
+async function getCategoryDeleteForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	const category = await db.getCategoryById(id);
+
+	if (!category) {
+		return res.status(404).render("404");
+	}
+
+	res.render("deleteConfirm", {
+		heading: `Delete ${category.name}?`,
+		message: "This can't be undone.",
+		formAction: `/categories/${id}/delete`,
+		cancelHref: `/categories/${id}`,
+		error: null,
+	});
+}
+
+async function postCategoryDeleteForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	try {
+		await db.deleteCategory(id);
+	} catch (err) {
+		if (err.code === "23503") {
+			const category = await db.getCategoryById(id);
+			return res.status(409).render("deleteConfirm", {
+				heading: `Delete ${category.name}?`,
+				message: "This can't be undone.",
+				formAction: `/categories/${id}/delete`,
+				cancelHref: `/categories/${id}`,
+				error:
+					"This category still has items in it. Move or delete them first.",
+			});
+		}
+		throw err;
+	}
+
+	res.redirect("/categories");
+}
+
 module.exports = {
 	getCategories,
 	getCategory,
@@ -112,4 +159,6 @@ module.exports = {
 	validateCategory,
 	getCategoryEditForm,
 	postCategoryEditForm,
+	getCategoryDeleteForm,
+	postCategoryDeleteForm,
 };
