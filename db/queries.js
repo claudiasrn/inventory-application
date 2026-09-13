@@ -89,6 +89,14 @@ async function getItemsBySupplier(supplierId) {
 	return rows;
 }
 
+async function insertCategory(name, description) {
+	const { rows } = await pool.query(
+		"INSERT INTO categories (name, description) VALUES ($1, $2) RETURNING id",
+		[name, description],
+	);
+	return rows[0].id;
+}
+
 module.exports = {
 	getAllCategories,
 	getCategoryById,
@@ -102,4 +110,5 @@ module.exports = {
 	getAllSuppliers,
 	getSupplierById,
 	getItemsBySupplier,
+	insertCategory,
 };
