@@ -28,6 +28,9 @@ function getCategoryForm(req, res) {
 	res.render("categoryForm", {
 		category: { name: "", description: "" },
 		errors: [],
+		heading: "New category",
+		submitLabel: "Create category",
+		formAction: "/categories/new",
 	});
 }
 
@@ -38,6 +41,9 @@ async function postCategoryForm(req, res) {
 		return res.status(400).render("categoryForm", {
 			category: req.body,
 			errors: errors.array(),
+			heading: "New category",
+			submitLabel: "Create category",
+			formAction: "/categories/new",
 		});
 	}
 
@@ -55,4 +61,55 @@ const validateCategory = [
 	body("description").trim(),
 ];
 
-module.exports = { getCategories, getCategory, getCategoryForm, postCategoryForm, validateCategory };
+async function getCategoryEditForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	const category = await db.getCategoryById(id);
+
+	if (!category) {
+		return res.status(404).render("404");
+	}
+
+	res.render("categoryForm", {
+		heading: "Edit category",
+		submitLabel: "Save changes",
+		formAction: `/categories/${id}/edit`,
+		category,
+		errors: [],
+	});
+}
+
+async function postCategoryEditForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	const errors = validationResult(req);
+
+	if (!errors.isEmpty()) {
+		return res.status(400).render("categoryForm", {
+			heading: "Edit category",
+			submitLabel: "Save changes",
+			formAction: `/categories/${id}/edit`,
+			category: req.body,
+			errors: errors.array(),
+		});
+	}
+
+	await db.updateCategory(id, req.body.name, req.body.description);
+	res.redirect(`/categories/${id}`);
+}
+
+module.exports = {
+	getCategories,
+	getCategory,
+	getCategoryForm,
+	postCategoryForm,
+	validateCategory,
+	getCategoryEditForm,
+	postCategoryEditForm,
+};
