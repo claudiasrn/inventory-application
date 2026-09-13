@@ -105,6 +105,16 @@ async function insertSupplier(name, contactEmail, country) {
 	return rows[0].id;
 }
 
+async function insertItem(name, description, price, stock, categoryId) {
+	const { rows } = await pool.query(
+		`INSERT INTO items (name, description, price, stock, category_id)
+		 VALUES ($1, $2, $3, $4, $5)
+		 RETURNING id`,
+		[name, description || null, price, stock, categoryId],
+	);
+	return rows[0].id;
+}
+
 module.exports = {
 	getAllCategories,
 	getCategoryById,
@@ -120,4 +130,5 @@ module.exports = {
 	getItemsBySupplier,
 	insertCategory,
 	insertSupplier,
+	insertItem,
 };
