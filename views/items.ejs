@@ -1,0 +1,36 @@
+    <%- include("partials/header") %>
+    <main>
+        <div class="top-part">
+            <h2>All items</h2>
+            <a href="/items/new">+ New item</a>
+        </div>
+        <% if (items.length === 0) { %>
+            <div class="empty">
+                <p>No items yet</p>
+                <p>Add one to start tracking stock.</p>
+            </div>
+        <% } else { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% items.forEach((item) => { %>
+                        <tr>
+                            <td><a href="/items/<%= item.id %>"><%= item.name %></a></td>
+                            <td><%= item.category_name %></td>
+                            <td><%= item.price %>€</td>
+                            <td><%= item.stock %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </main>
+</body>
+</html>
