@@ -1,0 +1,25 @@
+    <%- include("partials/header") %>
+    <main> 
+        <div class="top-part">
+            <h2>Categories</h2>
+            <a href="/categories/new">+ New category</a>
+        </div>
+        <% if (categories.length === 0) { %>
+            <div class="empty">
+                <p>No categories yet</p>
+                <p>Add one to start organizing the shop's stock.</p>
+            </div>
+        <% } else { %>
+            <div class="categories">
+            <% categories.forEach((category) => { %>
+                <a href="/catagories/<%= category.id %>">
+                    <h3><%= category.name %></h3>
+                    <p><%= category.description %></p>
+                    <p><%= category.item_count %> items</p>
+                </a>
+            <% }) %>
+            </div>
+        <% } %>
+    </main>
+</body>
+</html>
