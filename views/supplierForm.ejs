@@ -1,0 +1,30 @@
+    <%- include("partials/header") %>
+    <main>
+        <a href="/suppliers">All suppliers</a>
+        <h2>New supplier</h2>
+        <% if (errors.length > 0) { %>
+            <ul class="errors">
+                <% errors.forEach((error) => { %>
+                    <li><%= error.msg %></li>
+                <% }) %>
+            </ul>
+        <% } %>
+        <form method="post" action="/suppliers/new">
+            <div class="field">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" required maxlength="100" value="<%= supplier.name %>">
+            </div>
+            <div class="field">
+                <label for="contact_email">Contact email</label>
+                <input type="email" name="contact_email" id="contact_email" value="<%= supplier.contact_email %>">
+            </div>
+            <div class="field">
+                <label for="country">Country</label>
+                <input type="text" name="country" id="country" value="<%= supplier.country %>">
+            </div>
+            <button type="submit">Create supplier</button>
+            <a href="/suppliers">Cancel</a>
+        </form>
+    </main>
+</body>
+</html>
