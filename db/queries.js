@@ -133,6 +133,15 @@ async function updateSupplier(id, name, contactEmail, country) {
 	);
 }
 
+async function updateItem(id, name, description, price, stock, categoryId) {
+	await pool.query(
+		`UPDATE items
+		 SET name = $2, description = $3, price = $4, stock = $5, category_id = $6
+		 WHERE id = $1`,
+		[id, name, description || null, price, stock, categoryId],
+	);
+}
+
 module.exports = {
 	getAllCategories,
 	getCategoryById,
@@ -151,4 +160,5 @@ module.exports = {
 	insertItem,
 	updateCategory,
 	updateSupplier,
+	updateItem,
 };

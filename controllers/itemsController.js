@@ -27,6 +27,9 @@ async function getItem(req, res) {
 async function getItemForm(req, res) {
 	const categories = await db.getAllCategories();
 	res.render("itemForm", {
+		heading: "New item",
+		submitLabel: "Create item",
+		formAction: "/items/new",
 		item: {
 			name: "",
 			description: "",
@@ -45,6 +48,9 @@ async function postItemForm(req, res) {
 	if (!errors.isEmpty()) {
 		const categories = await db.getAllCategories();
 		return res.status(400).render("itemForm", {
+			heading: "New item",
+			submitLabel: "Create item",
+			formAction: "/items/new",
 			item: req.body,
 			categories,
 			errors: errors.array(),
@@ -88,10 +94,68 @@ const validateItem = [
 		.withMessage("Category is invalid"),
 ];
 
+async function getItemEditForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	const [item, categories] = await Promise.all([
+		db.getItemById(id),
+		db.getAllCategories(),
+	]);
+
+	if (!item) {
+		return res.status(404).render("404");
+	}
+
+	res.render("itemForm", {
+		heading: "Edit item",
+		submitLabel: "Save changes",
+		formAction: `/items/${id}/edit`,
+		item,
+		categories,
+		errors: [],
+	});
+}
+
+async function postItemEditForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	const errors = validationResult(req);
+
+	if (!errors.isEmpty()) {
+		const categories = await db.getAllCategories();
+		return res.status(400).render("itemForm", {
+			heading: "Edit item",
+			submitLabel: "Save changes",
+			formAction: `/items/${id}/edit`,
+			item: req.body,
+			categories,
+			errors: errors.array(),
+		});
+	}
+
+	await db.updateItem(
+		id,
+		req.body.name,
+		req.body.description,
+		req.body.price,
+		req.body.stock,
+		req.body.category_id,
+	);
+	res.redirect(`/items/${id}`);
+}
+
 module.exports = {
 	getItems,
 	getItem,
 	getItemForm,
 	postItemForm,
 	validateItem,
+	getItemEditForm,
+	postItemEditForm,
 };
