@@ -1,7 +1,7 @@
 const path = require("node:path");
 const express = require("express");
 const indexRouter = require("./routes/indexRouter");
-const categoryRouter = require("./routes/categoryRouter");
+const categoryRouter = require("./routes/categoriesRouter");
 const itemRouter = require("./routes/itemRouter");
 
 const app = express();
