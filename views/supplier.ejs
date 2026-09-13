@@ -1,0 +1,55 @@
+    <%- include("partials/header") %>
+    <main>
+        <a href="/suppliers">All suppliers</a>
+        <div class="top-part">
+            <h2><%= supplier.name %></h2>
+            <a href="/suppliers/<%= supplier.id %>/edit">Edit</a>
+            <a href="/suppliers/<%= supplier.id %>/delete">Delete</a>
+        </div>
+        <p>
+            <% if (supplier.contact_email) { %>
+                <%= supplier.contact_email %>
+            <% } %>
+            <% if (supplier.contact_email && supplier.country) { %>
+                ·
+            <% } %>
+            <% if (supplier.country) { %>
+                <%= supplier.country %>
+            <% } %>
+        </p>
+        <h3>Items supplied</h3>
+        <% if (items.length === 0) { %>
+            <div class="empty">
+                <p>No items linked yet</p>
+                <p>Link one to track what this supplier provides.</p>
+            </div>
+        <% } else { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Item</th>
+                        <th scope="col">Wholesale</th>
+                        <th scope="col">Our price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% items.forEach((item) => { %>
+                        <tr>
+                            <td><a href="/items/<%= item.id %>"><%= item.name %></a></td>
+                            <td><%= item.wholesale_price %>€</td>
+                            <td><%= item.price %>€</td>
+                            <td>
+                                <form method="post" action="/suppliers/<%= supplier.id %>/items/<%= item.id %>/remove">
+                                    <button type="submit">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+        <a href="/suppliers/<%= supplier.id %>/link">+ Link an item</a>
+    </main>
+</body>
+</html>
