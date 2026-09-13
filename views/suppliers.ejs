@@ -1,0 +1,34 @@
+    <%- include("partials/header") %>
+    <main>
+        <div class="top-part">
+            <h2>Suppliers</h2>
+            <a href="/suppliers/new">+ New supplier</a>
+        </div>
+        <% if (suppliers.length === 0) { %>
+            <div class="empty">
+                <p>No suppliers yet</p>
+                <p>Add one to start tracking where stock comes from.</p>
+            </div>
+        <% } else { %>
+            <div class="suppliers">
+                <% suppliers.forEach((supplier) => { %>
+                    <div class="supplier">
+                        <div class="supplier-name">
+                            <a href="/suppliers/<%= supplier.id %>"><%= supplier.name %></a>
+                            <% if (supplier.contact_email) { %>
+                                <p><%= supplier.contact_email %></p>
+                            <% } %>
+                        </div>
+                        <p class="supplier-meta">
+                            <% if (supplier.country) { %>
+                                <%= supplier.country %> ·
+                            <% } %>
+                            <%= supplier.item_count %> <%= Number(supplier.item_count) === 1 ? "item" : "items" %>
+                        </p>
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+    </main>
+</body>
+</html>
