@@ -74,6 +74,21 @@ async function getAllSuppliers() {
 	return rows;
 }
 
+async function getSupplierById(id) {
+	const { rows } = await pool.query("SELECT * FROM suppliers WHERE id = $1", [
+		id,
+	]);
+	return rows[0];
+}
+
+async function getItemsBySupplier(supplierId) {
+	const { rows } = await pool.query(
+		"SELECT items.id, items.name, items.price, item_suppliers.wholesale_price FROM item_suppliers JOIN items ON item_suppliers.item_id = items.id WHERE item_suppliers.supplier_id = $1 ORDER BY items.name",
+		[supplierId],
+	);
+	return rows;
+}
+
 module.exports = {
 	getAllCategories,
 	getCategoryById,
@@ -85,4 +100,6 @@ module.exports = {
 	getAllItems,
 	getSuppliersByItem,
 	getAllSuppliers,
+	getSupplierById,
+	getItemsBySupplier,
 };
