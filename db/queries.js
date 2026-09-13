@@ -67,6 +67,13 @@ async function getSuppliersByItem(itemId) {
 	return rows;
 }
 
+async function getAllSuppliers() {
+	const { rows } = await pool.query(
+		"SELECT id, name, contact_email, country, (SELECT COUNT(*) FROM item_suppliers WHERE item_suppliers.supplier_id = suppliers.id) AS item_count FROM suppliers ORDER BY name",
+	);
+	return rows;
+}
+
 module.exports = {
 	getAllCategories,
 	getCategoryById,
@@ -77,4 +84,5 @@ module.exports = {
 	getLowStockItems,
 	getAllItems,
 	getSuppliersByItem,
+	getAllSuppliers,
 };
