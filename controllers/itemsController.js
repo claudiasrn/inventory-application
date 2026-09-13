@@ -150,6 +150,37 @@ async function postItemEditForm(req, res) {
 	res.redirect(`/items/${id}`);
 }
 
+async function getItemDeleteForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	const item = await db.getItemById(id);
+
+	if (!item) {
+		return res.status(404).render("404");
+	}
+
+	res.render("deleteConfirm", {
+		heading: `Delete ${item.name}?`,
+		message: "This can't be undone. Any supplier links will be removed too.",
+		formAction: `/items/${id}/delete`,
+		cancelHref: `/items/${id}`,
+		error: null,
+	});
+}
+
+async function postItemDeleteForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	await db.deleteItem(id);
+	res.redirect("/items");
+}
+
 module.exports = {
 	getItems,
 	getItem,
@@ -158,4 +189,6 @@ module.exports = {
 	validateItem,
 	getItemEditForm,
 	postItemEditForm,
+	getItemDeleteForm,
+	postItemDeleteForm,
 };

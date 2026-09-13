@@ -118,6 +118,37 @@ async function postSupplierEditForm(req, res) {
 	res.redirect(`/suppliers/${id}`);
 }
 
+async function getSupplierDeleteForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	const supplier = await db.getSupplierById(id);
+
+	if (!supplier) {
+		return res.status(404).render("404");
+	}
+
+	res.render("deleteConfirm", {
+		heading: `Delete ${supplier.name}?`,
+		message: "This can't be undone. Any item links will be removed too.",
+		formAction: `/suppliers/${id}/delete`,
+		cancelHref: `/suppliers/${id}`,
+		error: null,
+	});
+}
+
+async function postSupplierDeleteForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	await db.deleteSupplier(id);
+	res.redirect("/suppliers");
+}
+
 module.exports = {
 	getSuppliers,
 	getSupplier,
@@ -126,4 +157,6 @@ module.exports = {
 	validateSupplier,
 	getSupplierEditForm,
 	postSupplierEditForm,
+	getSupplierDeleteForm,
+	postSupplierDeleteForm,
 };
