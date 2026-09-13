@@ -124,6 +124,15 @@ async function updateCategory(id, name, description) {
 	);
 }
 
+async function updateSupplier(id, name, contactEmail, country) {
+	await pool.query(
+		`UPDATE suppliers
+		 SET name = $2, contact_email = $3, country = $4
+		 WHERE id = $1`,
+		[id, name, contactEmail || null, country || null],
+	);
+}
+
 module.exports = {
 	getAllCategories,
 	getCategoryById,
@@ -141,4 +150,5 @@ module.exports = {
 	insertSupplier,
 	insertItem,
 	updateCategory,
+	updateSupplier,
 };

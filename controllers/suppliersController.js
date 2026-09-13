@@ -26,6 +26,9 @@ async function getSupplier(req, res) {
 
 function getSupplierForm(req, res) {
 	res.render("supplierForm", {
+		heading: "New supplier",
+		submitLabel: "Create supplier",
+		formAction: "/suppliers/new",
 		supplier: { name: "", contact_email: "", country: "" },
 		errors: [],
 	});
@@ -36,6 +39,9 @@ async function postSupplierForm(req, res) {
 
 	if (!errors.isEmpty()) {
 		return res.status(400).render("supplierForm", {
+			heading: "New supplier",
+			submitLabel: "Create supplier",
+			formAction: "/suppliers/new",
 			supplier: req.body,
 			errors: errors.array(),
 		});
@@ -64,10 +70,60 @@ const validateSupplier = [
 	body("country").trim(),
 ];
 
+async function getSupplierEditForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	const supplier = await db.getSupplierById(id);
+
+	if (!supplier) {
+		return res.status(404).render("404");
+	}
+
+	res.render("supplierForm", {
+		heading: "Edit supplier",
+		submitLabel: "Save changes",
+		formAction: `/suppliers/${id}/edit`,
+		supplier,
+		errors: [],
+	});
+}
+
+async function postSupplierEditForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	const errors = validationResult(req);
+
+	if (!errors.isEmpty()) {
+		return res.status(400).render("supplierForm", {
+			heading: "Edit supplier",
+			submitLabel: "Save changes",
+			formAction: `/suppliers/${id}/edit`,
+			supplier: req.body,
+			errors: errors.array(),
+		});
+	}
+
+	await db.updateSupplier(
+		id,
+		req.body.name,
+		req.body.contact_email,
+		req.body.country,
+	);
+	res.redirect(`/suppliers/${id}`);
+}
+
 module.exports = {
 	getSuppliers,
 	getSupplier,
 	getSupplierForm,
 	postSupplierForm,
 	validateSupplier,
+	getSupplierEditForm,
+	postSupplierEditForm,
 };

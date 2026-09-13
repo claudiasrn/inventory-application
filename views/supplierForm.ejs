@@ -1,7 +1,7 @@
     <%- include("partials/header") %>
     <main>
         <a href="/suppliers">All suppliers</a>
-        <h2>New supplier</h2>
+        <h2><%= heading %></h2>
         <% if (errors.length > 0) { %>
             <ul class="errors">
                 <% errors.forEach((error) => { %>
@@ -9,7 +9,7 @@
                 <% }) %>
             </ul>
         <% } %>
-        <form method="post" action="/suppliers/new">
+        <form method="post" action="<%= formAction %>">
             <div class="field">
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name" required maxlength="100" value="<%= supplier.name %>">
@@ -22,7 +22,7 @@
                 <label for="country">Country</label>
                 <input type="text" name="country" id="country" value="<%= supplier.country %>">
             </div>
-            <button type="submit">Create supplier</button>
+            <button type="submit"><%= submitLabel %></button>
             <a href="/suppliers">Cancel</a>
         </form>
     </main>
