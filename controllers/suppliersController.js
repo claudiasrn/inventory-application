@@ -149,6 +149,79 @@ async function postSupplierDeleteForm(req, res) {
 	res.redirect("/suppliers");
 }
 
+const validateLink = [
+	body("item_id")
+		.notEmpty()
+		.withMessage("Item is required")
+		.isInt()
+		.withMessage("Item is invalid"),
+	body("wholesale_price")
+		.trim()
+		.notEmpty()
+		.withMessage("Wholesale price is required")
+		.isFloat({ min: 0 })
+		.withMessage("Wholesale price must be a number of 0 or more"),
+];
+
+async function getSupplierLinkForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	const [supplier, items] = await Promise.all([
+		db.getSupplierById(id),
+		db.getUnlinkedItemsForSupplier(id),
+	]);
+
+	if (!supplier) {
+		return res.status(404).render("404");
+	}
+
+	res.render("supplierLinkForm", {
+		supplier,
+		items,
+		link: { item_id: "", wholesale_price: "" },
+		errors: [],
+	});
+}
+
+async function postSupplierLinkForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	const errors = validationResult(req);
+
+	if (!errors.isEmpty()) {
+		const [supplier, items] = await Promise.all([
+			db.getSupplierById(id),
+			db.getUnlinkedItemsForSupplier(id),
+		]);
+		return res.status(400).render("supplierLinkForm", {
+			supplier,
+			items,
+			link: req.body,
+			errors: errors.array(),
+		});
+	}
+
+	await db.linkItemSupplier(req.body.item_id, id, req.body.wholesale_price);
+	res.redirect(`/suppliers/${id}`);
+}
+
+async function postSupplierItemRemove(req, res) {
+	const id = Number(req.params.id);
+	const itemId = Number(req.params.itemId);
+	if (!Number.isInteger(id) || !Number.isInteger(itemId)) {
+		return res.status(404).render("404");
+	}
+
+	await db.unlinkItemSupplier(itemId, id);
+	res.redirect(`/suppliers/${id}`);
+}
+
 module.exports = {
 	getSuppliers,
 	getSupplier,
@@ -159,4 +232,8 @@ module.exports = {
 	postSupplierEditForm,
 	getSupplierDeleteForm,
 	postSupplierDeleteForm,
+	validateLink,
+	getSupplierLinkForm,
+	postSupplierLinkForm,
+	postSupplierItemRemove,
 };

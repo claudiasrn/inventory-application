@@ -1,0 +1,39 @@
+    <%- include("partials/header") %>
+    <main>
+        <a href="/items/<%= item.id %>"><%= item.name %></a>
+        <h2>Link a supplier</h2>
+        <p>Record who supplies <%= item.name %> and at what price.</p>
+        <% if (errors.length > 0) { %>
+            <ul class="errors">
+                <% errors.forEach((error) => { %>
+                    <li><%= error.msg %></li>
+                <% }) %>
+            </ul>
+        <% } %>
+        <% if (suppliers.length === 0) { %>
+            <div class="empty">
+                <p>No suppliers left to link</p>
+                <p>Every supplier is already linked to this item.</p>
+            </div>
+        <% } else { %>
+            <form method="post" action="/items/<%= item.id %>/link">
+                <div class="field">
+                    <label for="supplier_id">Supplier</label>
+                    <select name="supplier_id" id="supplier_id" required>
+                        <option value="">Choose a supplier…</option>
+                        <% suppliers.forEach((supplier) => { %>
+                            <option value="<%= supplier.id %>" <%= String(supplier.id) === String(link.supplier_id) ? "selected" : "" %>><%= supplier.name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="wholesale_price">Wholesale price</label>
+                    <input type="number" name="wholesale_price" id="wholesale_price" required min="0" step="0.01" value="<%= link.wholesale_price %>">
+                </div>
+                <button type="submit">Link supplier</button>
+                <a href="/items/<%= item.id %>">Cancel</a>
+            </form>
+        <% } %>
+    </main>
+</body>
+</html>

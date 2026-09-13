@@ -181,6 +181,79 @@ async function postItemDeleteForm(req, res) {
 	res.redirect("/items");
 }
 
+const validateLink = [
+	body("supplier_id")
+		.notEmpty()
+		.withMessage("Supplier is required")
+		.isInt()
+		.withMessage("Supplier is invalid"),
+	body("wholesale_price")
+		.trim()
+		.notEmpty()
+		.withMessage("Wholesale price is required")
+		.isFloat({ min: 0 })
+		.withMessage("Wholesale price must be a number of 0 or more"),
+];
+
+async function getItemLinkForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	const [item, suppliers] = await Promise.all([
+		db.getItemById(id),
+		db.getUnlinkedSuppliersForItem(id),
+	]);
+
+	if (!item) {
+		return res.status(404).render("404");
+	}
+
+	res.render("itemLinkForm", {
+		item,
+		suppliers,
+		link: { supplier_id: "", wholesale_price: "" },
+		errors: [],
+	});
+}
+
+async function postItemLinkForm(req, res) {
+	const id = Number(req.params.id);
+	if (!Number.isInteger(id)) {
+		return res.status(404).render("404");
+	}
+
+	const errors = validationResult(req);
+
+	if (!errors.isEmpty()) {
+		const [item, suppliers] = await Promise.all([
+			db.getItemById(id),
+			db.getUnlinkedSuppliersForItem(id),
+		]);
+		return res.status(400).render("itemLinkForm", {
+			item,
+			suppliers,
+			link: req.body,
+			errors: errors.array(),
+		});
+	}
+
+	await db.linkItemSupplier(id, req.body.supplier_id, req.body.wholesale_price);
+	res.redirect(`/items/${id}`);
+}
+
+async function postItemSupplierRemove(req, res) {
+	const id = Number(req.params.id);
+	const supplierId = Number(req.params.supplierId);
+	if (!Number.isInteger(id) || !Number.isInteger(supplierId)) {
+		return res.status(404).render("404");
+	}
+
+	await db.unlinkItemSupplier(id, supplierId);
+	res.redirect(`/items/${id}`);
+}
+
 module.exports = {
 	getItems,
 	getItem,
@@ -191,4 +264,8 @@ module.exports = {
 	postItemEditForm,
 	getItemDeleteForm,
 	postItemDeleteForm,
+	validateLink,
+	getItemLinkForm,
+	postItemLinkForm,
+	postItemSupplierRemove,
 };

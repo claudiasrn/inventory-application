@@ -154,6 +154,53 @@ async function deleteSupplier(id) {
 	await pool.query("DELETE FROM suppliers WHERE id = $1", [id]);
 }
 
+async function getUnlinkedSuppliersForItem(itemId) {
+	const { rows } = await pool.query(
+		`SELECT id, name
+		 FROM suppliers
+		 WHERE NOT EXISTS (
+		   SELECT 1 FROM item_suppliers
+		   WHERE item_suppliers.supplier_id = suppliers.id
+		     AND item_suppliers.item_id = $1
+		 )
+		 ORDER BY name`,
+		[itemId],
+	);
+	return rows;
+}
+
+async function linkItemSupplier(itemId, supplierId, wholesalePrice) {
+	await pool.query(
+		`INSERT INTO item_suppliers (item_id, supplier_id, wholesale_price)
+		 VALUES ($1, $2, $3)
+		 ON CONFLICT (item_id, supplier_id)
+		 DO UPDATE SET wholesale_price = EXCLUDED.wholesale_price`,
+		[itemId, supplierId, wholesalePrice],
+	);
+}
+
+async function unlinkItemSupplier(itemId, supplierId) {
+	await pool.query(
+		"DELETE FROM item_suppliers WHERE item_id = $1 AND supplier_id = $2",
+		[itemId, supplierId],
+	);
+}
+
+async function getUnlinkedItemsForSupplier(supplierId) {
+	const { rows } = await pool.query(
+		`SELECT id, name
+		 FROM items
+		 WHERE NOT EXISTS (
+		   SELECT 1 FROM item_suppliers
+		   WHERE item_suppliers.item_id = items.id
+		     AND item_suppliers.supplier_id = $1
+		 )
+		 ORDER BY name`,
+		[supplierId],
+	);
+	return rows;
+}
+
 module.exports = {
 	getAllCategories,
 	getCategoryById,
@@ -176,4 +223,8 @@ module.exports = {
 	deleteCategory,
 	deleteItem,
 	deleteSupplier,
+	getUnlinkedSuppliersForItem,
+	linkItemSupplier,
+	unlinkItemSupplier,
+	getUnlinkedItemsForSupplier,
 };
