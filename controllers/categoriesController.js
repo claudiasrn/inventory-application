@@ -5,4 +5,15 @@ async function getCategories(req, res) {
 	res.render("categories", { categories });
 }
 
-module.exports = { getCategories };
+async function getCategory(req, res) {
+	const id = Number(req.params.id);
+
+	const [category, items] = await Promise.all([
+		db.getCategoryById(id),
+		db.getItemsByCategory(id),
+	]);
+
+	res.render("category", { category, items });
+}
+
+module.exports = { getCategories, getCategory };
