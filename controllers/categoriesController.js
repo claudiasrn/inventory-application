@@ -119,6 +119,7 @@ async function getCategoryDeleteForm(req, res) {
 	res.render("deleteConfirm", {
 		heading: `Delete ${category.name}?`,
 		message: "This can't be undone.",
+		confirmLabel: "Delete",
 		formAction: `/categories/${id}/delete`,
 		cancelHref: `/categories/${id}`,
 		error: null,
@@ -139,6 +140,7 @@ async function postCategoryDeleteForm(req, res) {
 			return res.status(409).render("deleteConfirm", {
 				heading: `Delete ${category.name}?`,
 				message: "This can't be undone.",
+				confirmLabel: "Delete",
 				formAction: `/categories/${id}/delete`,
 				cancelHref: `/categories/${id}`,
 				error:

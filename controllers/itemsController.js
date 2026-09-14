@@ -165,6 +165,7 @@ async function getItemDeleteForm(req, res) {
 	res.render("deleteConfirm", {
 		heading: `Delete ${item.name}?`,
 		message: "This can't be undone. Any supplier links will be removed too.",
+		confirmLabel: "Delete",
 		formAction: `/items/${id}/delete`,
 		cancelHref: `/items/${id}`,
 		error: null,
@@ -273,6 +274,7 @@ async function getItemSupplierRemove(req, res) {
 	res.render("deleteConfirm", {
 		heading: `Unlink ${supplier.name} from ${item.name}?`,
 		message: "The item and the supplier both stay, only the link is removed.",
+		confirmLabel: "Unlink",
 		formAction: `/items/${id}/suppliers/${supplierId}/remove`,
 		cancelHref: `/items/${id}`,
 		error: null,
