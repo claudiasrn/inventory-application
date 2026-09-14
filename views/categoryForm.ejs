@@ -18,6 +18,10 @@
                 <label for="description">Description</label>
                 <textarea name="description" id="description" rows="3"><%= category.description %></textarea>
             </div>
+            <div class="field">
+                <label for="password">Admin password</label>
+                <input type="password" name="password" id="password" required>
+            </div>
             <button type="submit"><%= submitLabel %></button>
             <a href="/categories">Cancel</a>
         </form>

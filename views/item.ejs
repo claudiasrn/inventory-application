@@ -41,11 +41,7 @@
                         <tr>
                             <td><a href="/suppliers/<%= supplier.id %>"><%= supplier.name %></a></td>
                             <td><%= supplier.wholesale_price %>€</td>
-                            <td>
-                                <form method="post" action="/items/<%= item.id %>/suppliers/<%= supplier.id %>/remove">
-                                    <button type="submit">Remove</button>
-                                </form>
-                            </td>
+                            <td><a href="/items/<%= item.id %>/suppliers/<%= supplier.id %>/remove">Remove</a></td>
                         </tr>
                     <% }) %>
                 </tbody>

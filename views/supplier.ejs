@@ -39,11 +39,7 @@
                             <td><a href="/items/<%= item.id %>"><%= item.name %></a></td>
                             <td><%= item.wholesale_price %>€</td>
                             <td><%= item.price %>€</td>
-                            <td>
-                                <form method="post" action="/suppliers/<%= supplier.id %>/items/<%= item.id %>/remove">
-                                    <button type="submit">Remove</button>
-                                </form>
-                            </td>
+                            <td><a href="/suppliers/<%= supplier.id %>/items/<%= item.id %>/remove">Remove</a></td>
                         </tr>
                     <% }) %>
                 </tbody>

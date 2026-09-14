@@ -254,6 +254,31 @@ async function postItemSupplierRemove(req, res) {
 	res.redirect(`/items/${id}`);
 }
 
+async function getItemSupplierRemove(req, res) {
+	const id = Number(req.params.id);
+	const supplierId = Number(req.params.supplierId);
+	if (!Number.isInteger(id) || !Number.isInteger(supplierId)) {
+		return res.status(404).render("404");
+	}
+
+	const [item, supplier] = await Promise.all([
+		db.getItemById(id),
+		db.getSupplierById(supplierId),
+	]);
+
+	if (!item || !supplier) {
+		return res.status(404).render("404");
+	}
+
+	res.render("deleteConfirm", {
+		heading: `Unlink ${supplier.name} from ${item.name}?`,
+		message: "The item and the supplier both stay, only the link is removed.",
+		formAction: `/items/${id}/suppliers/${supplierId}/remove`,
+		cancelHref: `/items/${id}`,
+		error: null,
+	});
+}
+
 module.exports = {
 	getItems,
 	getItem,
@@ -268,4 +293,5 @@ module.exports = {
 	getItemLinkForm,
 	postItemLinkForm,
 	postItemSupplierRemove,
+	getItemSupplierRemove,
 };

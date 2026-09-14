@@ -6,6 +6,10 @@
         <% } %>
         <p><%= message %></p>
         <form method="post" action="<%= formAction %>">
+            <div class="field">
+                <label for="password">Admin password</label>
+                <input type="password" name="password" id="password" required>
+            </div>
             <button type="submit">Delete</button>
             <a href="<%= cancelHref %>">Cancel</a>
         </form>

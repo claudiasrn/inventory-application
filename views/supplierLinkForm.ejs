@@ -30,6 +30,10 @@
                     <label for="wholesale_price">Wholesale price</label>
                     <input type="number" name="wholesale_price" id="wholesale_price" required min="0" step="0.01" value="<%= link.wholesale_price %>">
                 </div>
+                <div class="field">
+                    <label for="password">Admin password</label>
+                    <input type="password" name="password" id="password" required>
+                </div>
                 <button type="submit">Link item</button>
                 <a href="/suppliers/<%= supplier.id %>">Cancel</a>
             </form>
