@@ -47,7 +47,22 @@ async function postCategoryForm(req, res) {
 		});
 	}
 
-	const id = await db.insertCategory(req.body.name, req.body.description);
+	let id;
+	try {
+		id = await db.insertCategory(req.body.name, req.body.description);
+	} catch (err) {
+		if (err.code === "23505") {
+			return res.status(400).render("categoryForm", {
+				category: req.body,
+				errors: [{ msg: "A category with that name already exists" }],
+				heading: "New category",
+				submitLabel: "Create category",
+				formAction: "/categories/new",
+			});
+		}
+		throw err;
+	}
+
 	res.redirect(`/categories/${id}`);
 }
 
@@ -100,7 +115,21 @@ async function postCategoryEditForm(req, res) {
 		});
 	}
 
-	await db.updateCategory(id, req.body.name, req.body.description);
+	try {
+		await db.updateCategory(id, req.body.name, req.body.description);
+	} catch (err) {
+		if (err.code === "23505") {
+			return res.status(400).render("categoryForm", {
+				heading: "Edit category",
+				submitLabel: "Save changes",
+				formAction: `/categories/${id}/edit`,
+				category: req.body,
+				errors: [{ msg: "A category with that name already exists" }],
+			});
+		}
+		throw err;
+	}
+
 	res.redirect(`/categories/${id}`);
 }
 

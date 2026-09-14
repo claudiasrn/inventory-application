@@ -47,11 +47,26 @@ async function postSupplierForm(req, res) {
 		});
 	}
 
-	const id = await db.insertSupplier(
-		req.body.name,
-		req.body.contact_email,
-		req.body.country,
-	);
+	let id;
+	try {
+		id = await db.insertSupplier(
+			req.body.name,
+			req.body.contact_email,
+			req.body.country,
+		);
+	} catch (err) {
+		if (err.code === "23505") {
+			return res.status(400).render("supplierForm", {
+				heading: "New supplier",
+				submitLabel: "Create supplier",
+				formAction: "/suppliers/new",
+				supplier: req.body,
+				errors: [{ msg: "A supplier with that name already exists" }],
+			});
+		}
+		throw err;
+	}
+
 	res.redirect(`/suppliers/${id}`);
 }
 
@@ -109,12 +124,26 @@ async function postSupplierEditForm(req, res) {
 		});
 	}
 
-	await db.updateSupplier(
-		id,
-		req.body.name,
-		req.body.contact_email,
-		req.body.country,
-	);
+	try {
+		await db.updateSupplier(
+			id,
+			req.body.name,
+			req.body.contact_email,
+			req.body.country,
+		);
+	} catch (err) {
+		if (err.code === "23505") {
+			return res.status(400).render("supplierForm", {
+				heading: "Edit supplier",
+				submitLabel: "Save changes",
+				formAction: `/suppliers/${id}/edit`,
+				supplier: req.body,
+				errors: [{ msg: "A supplier with that name already exists" }],
+			});
+		}
+		throw err;
+	}
+
 	res.redirect(`/suppliers/${id}`);
 }
 
