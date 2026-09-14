@@ -18,6 +18,13 @@ app.use("/", indexRouter);
 app.use("/categories", categoryRouter);
 app.use("/items", itemRouter);
 app.use("/suppliers", supplierRouter);
+app.use((req, res) => {
+	res.status(404).render("404");
+});
+app.use((err, req, res, next) => {
+	console.error(err);
+	res.status(500).render("500");
+});
 
 app.listen(process.env.PORT || 8080, () => {
 	console.log("Server running");
