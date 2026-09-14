@@ -1,6 +1,6 @@
     <%- include("partials/header") %>
     <main>
-        <a href="/suppliers/<%= supplier.id %>"><%= supplier.name %></a>
+        <a href="/suppliers/<%= supplier.id %>" class="back"><%= supplier.name %></a>
         <h2>Link an item</h2>
         <p>Record what <%= supplier.name %> supplies and at what price.</p>
         <% if (errors.length > 0) { %>

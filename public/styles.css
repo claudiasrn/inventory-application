@@ -16,6 +16,50 @@
 	--max: 68rem;
 }
 
+/* archivo-regular - latin_latin-ext */
+@font-face {
+	font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+	font-family: "Archivo";
+	font-style: normal;
+	font-weight: 400;
+	src: url("./fonts/archivo-v25-latin_latin-ext/archivo-v25-latin_latin-ext-regular.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* archivo-500 - latin_latin-ext */
+@font-face {
+	font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+	font-family: "Archivo";
+	font-style: normal;
+	font-weight: 500;
+	src: url("./fonts/archivo-v25-latin_latin-ext/archivo-v25-latin_latin-ext-500.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* archivo-600 - latin_latin-ext */
+@font-face {
+	font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+	font-family: "Archivo";
+	font-style: normal;
+	font-weight: 600;
+	src: url("./fonts/archivo-v25-latin_latin-ext/archivo-v25-latin_latin-ext-600.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* ibm-plex-mono-regular - latin_latin-ext */
+@font-face {
+	font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+	font-family: "IBM Plex Mono";
+	font-style: normal;
+	font-weight: 400;
+	src: url("./fonts/ibm-plex-mono-v20-latin_latin-ext/ibm-plex-mono-v20-latin_latin-ext-regular.woff2")
+		format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+/* ibm-plex-mono-500 - latin_latin-ext */
+@font-face {
+	font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+	font-family: "IBM Plex Mono";
+	font-style: normal;
+	font-weight: 500;
+	src: url("./fonts/ibm-plex-mono-v20-latin_latin-ext/ibm-plex-mono-v20-latin_latin-ext-500.woff2")
+		format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
 *,
 *::before,
 *::after {
@@ -26,9 +70,28 @@ body {
 	margin: 0;
 	background: var(--bg);
 	color: var(--ink);
-	font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+	font-family: "Archivo", system-ui, sans-serif;
 	font-size: 16px;
 	line-height: 1.55;
+}
+
+dd,
+td,
+th,
+.item p,
+.supplier-meta {
+	font-family: "IBM Plex Mono", ui-monospace, monospace;
+	font-variant-numeric: tabular-nums;
+}
+
+th {
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	font-size: 0.75rem;
+}
+
+dd a {
+	font-family: "Archivo", sans-serif;
 }
 
 h1,
@@ -60,12 +123,28 @@ a:hover {
 	text-decoration: underline;
 }
 
+.back {
+	font-size: 0.9rem;
+}
+
+.back:hover {
+	text-decoration: none;
+	color: var(--ink);
+}
+
+.back::before {
+	content: "←";
+	margin-right: 0.4rem;
+}
+
 /* header */
 
 header {
-	background: var(--surface);
+	background: none;
 	border-bottom: 1px solid var(--line);
-	padding: 1.1rem 1.5rem;
+	max-width: var(--max);
+	margin: 0 auto;
+	padding: 1.5rem 1.5rem 1.1rem;
 	display: flex;
 	flex-wrap: wrap;
 	gap: var(--gap);
@@ -316,7 +395,7 @@ table {
 	border-radius: 0;
 	overflow: hidden;
 	font-size: 0.95rem;
-    min-width: 30rem;
+	min-width: 30rem;
 }
 
 thead {
