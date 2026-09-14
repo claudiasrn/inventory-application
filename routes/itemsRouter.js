@@ -13,20 +13,26 @@ const {
 	getItemLinkForm,
 	postItemLinkForm,
 	postItemSupplierRemove,
+	getItemSupplierRemove,
 } = require("../controllers/itemsController");
 const { requireAdmin } = require("../middleware/adminAuth");
 const itemRouter = Router();
 
 itemRouter.get("/", getItems);
 itemRouter.get("/new", getItemForm);
-itemRouter.post("/new",requireAdmin, validateItem, postItemForm);
+itemRouter.post("/new", requireAdmin, validateItem, postItemForm);
 itemRouter.get("/:id", getItem);
 itemRouter.get("/:id/edit", getItemEditForm);
-itemRouter.post("/:id/edit",requireAdmin, validateItem, postItemEditForm);
+itemRouter.post("/:id/edit", requireAdmin, validateItem, postItemEditForm);
 itemRouter.get("/:id/delete", getItemDeleteForm);
 itemRouter.post("/:id/delete", requireAdmin, postItemDeleteForm);
 itemRouter.get("/:id/link", getItemLinkForm);
-itemRouter.post("/:id/link",requireAdmin, validateLink, postItemLinkForm);
-itemRouter.post("/:id/suppliers/:supplierId/remove", requireAdmin, postItemSupplierRemove);
+itemRouter.post("/:id/link", requireAdmin, validateLink, postItemLinkForm);
+itemRouter.get("/:id/suppliers/:supplierId/remove", getItemSupplierRemove);
+itemRouter.post(
+	"/:id/suppliers/:supplierId/remove",
+	requireAdmin,
+	postItemSupplierRemove,
+);
 
 module.exports = itemRouter;
