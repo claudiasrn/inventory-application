@@ -10,26 +10,28 @@
                 <p>Add one to start tracking stock.</p>
             </div>
         <% } else { %>
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col">Item</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Stock</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% items.forEach((item) => { %>
+            <div class="table-wrap">
+                <table>
+                    <thead>
                         <tr>
-                            <td><a href="/items/<%= item.id %>"><%= item.name %></a></td>
-                            <td><%= item.category_name %></td>
-                            <td><%= item.price %>€</td>
-                            <td><%= item.stock %></td>
+                            <th scope="col">Item</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Stock</th>
                         </tr>
-                    <% }) %>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <% items.forEach((item) => { %>
+                            <tr>
+                                <td><a href="/items/<%= item.id %>"><%= item.name %></a></td>
+                                <td><%= item.category_name %></td>
+                                <td><%= item.price %>€</td>
+                                <td><%= item.stock %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
         <% } %>
     </main>
 </body>

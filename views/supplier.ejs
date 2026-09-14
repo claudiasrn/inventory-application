@@ -3,8 +3,10 @@
         <a href="/suppliers">All suppliers</a>
         <div class="top-part">
             <h2><%= supplier.name %></h2>
-            <a href="/suppliers/<%= supplier.id %>/edit">Edit</a>
-            <a href="/suppliers/<%= supplier.id %>/delete">Delete</a>
+            <div class="actions">
+                <a href="/suppliers/<%= supplier.id %>/edit">Edit</a>
+                <a href="/suppliers/<%= supplier.id %>/delete">Delete</a>
+            </div>
         </div>
         <p>
             <% if (supplier.contact_email) { %>
@@ -24,26 +26,28 @@
                 <p>Link one to track what this supplier provides.</p>
             </div>
         <% } else { %>
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col">Item</th>
-                        <th scope="col">Wholesale</th>
-                        <th scope="col">Our price</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% items.forEach((item) => { %>
+            <div class="table-wrap">
+                <table>
+                    <thead>
                         <tr>
-                            <td><a href="/items/<%= item.id %>"><%= item.name %></a></td>
-                            <td><%= item.wholesale_price %>€</td>
-                            <td><%= item.price %>€</td>
-                            <td><a href="/suppliers/<%= supplier.id %>/items/<%= item.id %>/remove">Remove</a></td>
+                            <th scope="col">Item</th>
+                            <th scope="col">Wholesale</th>
+                            <th scope="col">Our price</th>
+                            <th></th>
                         </tr>
-                    <% }) %>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <% items.forEach((item) => { %>
+                            <tr>
+                                <td><a href="/items/<%= item.id %>"><%= item.name %></a></td>
+                                <td><%= item.wholesale_price %>€</td>
+                                <td><%= item.price %>€</td>
+                                <td><a href="/suppliers/<%= supplier.id %>/items/<%= item.id %>/remove">Remove</a></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
         <% } %>
         <a href="/suppliers/<%= supplier.id %>/link">+ Link an item</a>
     </main>
